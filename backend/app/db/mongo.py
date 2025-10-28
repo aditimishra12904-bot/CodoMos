@@ -13,26 +13,19 @@ from app.models import (
     FormResponse,
     Task,
     XPEvent,
-    XPConfiguration,
-    AppSettings,
-    RepositoryMetadata,
-    Branch,
-    Commit,
-    Issue,
-    PullRequest,
-    Contributor,
-    Release,
-    Milestone,
-    ProjectBoard,
-    Activity,
-    XPLeaderboard,
 )
 
 _client: AsyncIOMotorClient | None = None
 
 
-async def init_mongo() -> None:
+async def init_mongo() -> bool:
+    """Initialize Mongo/Beanie if a URI is configured.
+    Returns True if initialized, False if skipped (no URI).
+    """
     global _client
+    if not settings.MONGODB_URI:
+        print("[mongo] MONGODB_URI not set; skipping database initialization (dev mode)")
+        return False
     _client = AsyncIOMotorClient(settings.MONGODB_URI)
     db = _client[settings.MONGODB_DB]
     await init_beanie(
@@ -47,21 +40,9 @@ async def init_mongo() -> None:
             FormResponse,
             Task,
             XPEvent,
-            XPConfiguration,
-            AppSettings,
-            RepositoryMetadata,
-            Branch,
-            Commit,
-            Issue,
-            PullRequest,
-            Contributor,
-            Release,
-            Milestone,
-            ProjectBoard,
-            Activity,
-            XPLeaderboard,
         ],
     )
+    return True
 
 
 def get_client() -> AsyncIOMotorClient:

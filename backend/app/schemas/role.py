@@ -1,5 +1,5 @@
-from typing import Optional, Dict, Any
-from pydantic import BaseModel, ConfigDict, field_serializer
+from typing import Optional, Dict
+from pydantic import BaseModel, ConfigDict
 
 
 class RoleBase(BaseModel):
@@ -19,9 +19,5 @@ class RoleUpdate(BaseModel):
 
 
 class RoleOut(RoleBase):
-    id: Any
+    id: str
     model_config = ConfigDict(from_attributes=True)
-
-    @field_serializer('id')
-    def serialize_id(self, v):
-        return str(v)

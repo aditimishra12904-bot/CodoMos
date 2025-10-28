@@ -22,16 +22,12 @@ class Settings(BaseSettings):
         return [s.strip() for s in (self.BACKEND_CORS_ORIGINS or "").split(",") if s.strip()]
 
     # MongoDB Atlas (no fallback)
-    MONGODB_URI: str
+    MONGODB_URI: str | None = os.getenv("MONGODB_URI")
     MONGODB_DB: str = "cogniwork"
 
     # AI (Gemini)
     GEMINI_API_KEY: str | None = os.getenv("GEMINI_API_KEY")
     GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
-
-    # Public base URL (scheme + host[:port]) for constructing webhook callback URLs
-    # Example: http://127.0.0.1:8000 or https://api.example.com
-    PUBLIC_BASE_URL: str = os.getenv("PUBLIC_BASE_URL", "http://127.0.0.1:8000")
 
 
 settings = Settings()  # type: ignore
